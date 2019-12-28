@@ -1,0 +1,153 @@
+Started by user mohan
+Running in Durability level: MAX_SURVIVABILITY
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/nodejs-docker
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Docker build)
+[Pipeline] checkout
+Warning: CredentialId "c76de21c-3533-47d8-bf8f-102f4a4fe2f8" could not be found.
+ > git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/mohangarapati/docker-jenkins-poc.git # timeout=10
+Fetching upstream changes from https://github.com/mohangarapati/docker-jenkins-poc.git
+ > git --version # timeout=10
+ > git fetch --tags --progress -- https://github.com/mohangarapati/docker-jenkins-poc.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision 20dcc8946f5f56c87500fc1e83ee98f452acb0e0 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 20dcc8946f5f56c87500fc1e83ee98f452acb0e0 # timeout=10
+Commit message: "modifing jenkins file"
+ > git rev-list --no-walk 20dcc8946f5f56c87500fc1e83ee98f452acb0e0 # timeout=10
+[Pipeline] sh
++ cd /var/jenkins_home/workspace/nodejs-docker/nodejs-demo/nodejs-demo/
++ ls
+Dockerfile
+README.md
+app.js
+bin
+package.json
+public
+routes
+views
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/nodejs-docker/nodejs-demo/nodejs-demo
+[Pipeline] {
+[Pipeline] sh
++ pwd
+/var/jenkins_home/workspace/nodejs-docker/nodejs-demo/nodejs-demo
+[Pipeline] sh
++ docker build -t mohangarapatidoc/docker-jenkins-poc:latest .
+Sending build context to Docker daemon  442.9kB
+
+Step 1/14 : FROM node:6-alpine
+ ---> dfc29bfa7d41
+Step 2/14 : ENV NODE_VERSION 8.17.0
+ ---> Using cache
+ ---> 61abb694b84e
+Step 3/14 : RUN apk add --update tini
+ ---> Using cache
+ ---> 671d7fc8ecec
+Step 4/14 : RUN apk add --update nodejs
+ ---> Using cache
+ ---> 351f523b1360
+Step 5/14 : RUN mkdir -p /usr/src/app && chown -R node:node /usr/src/app
+ ---> Using cache
+ ---> c2539f5d3b39
+Step 6/14 : WORKDIR /usr/src/app
+ ---> Using cache
+ ---> a544b8a2b20e
+Step 7/14 : COPY package.json ./
+ ---> Using cache
+ ---> 4014640c26cf
+Step 8/14 : USER node
+ ---> Using cache
+ ---> 9c016667edaa
+Step 9/14 : RUN npm install
+ ---> Using cache
+ ---> 9fb8168c42b1
+Step 10/14 : USER root
+ ---> Using cache
+ ---> e5183d18f662
+Step 11/14 : RUN npm cache clean --force
+ ---> Using cache
+ ---> 078b87069ffd
+Step 12/14 : COPY --chown=node:node . /usr/src/app
+ ---> Using cache
+ ---> 05e70b1708d2
+Step 13/14 : EXPOSE 3000
+ ---> Using cache
+ ---> 23e456da7308
+Step 14/14 : CMD /sbin/tini -- node ./bin/www
+ ---> Using cache
+ ---> 682f1929da02
+Successfully built 682f1929da02
+Successfully tagged mohangarapatidoc/docker-jenkins-poc:latest
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] sh
++ pwd
+/var/jenkins_home/workspace/nodejs-docker
++ ls
+nodejs-demo
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Docker upload)
+[Pipeline] withCredentials
+Masking supported pattern matches of $dockerHubUser or $dockerHubPassword
+[Pipeline] {
+[Pipeline] sh
++ docker login -u **** -p ****
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /var/jenkins_home/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[Pipeline] sh
++ docker push ****/docker-jenkins-poc:latest
+The push refers to repository [docker.io/****/docker-jenkins-poc]
+1537ed747ac9: Preparing
+4ad820e3e561: Preparing
+0f23dbac2da4: Preparing
+ee8140f54162: Preparing
+3473b94bc0e3: Preparing
+62847262644f: Preparing
+86ddeaa3ae14: Preparing
+f168d52a989d: Preparing
+17b7c23fba03: Preparing
+a464c54f93a9: Preparing
+86ddeaa3ae14: Waiting
+f168d52a989d: Waiting
+17b7c23fba03: Waiting
+a464c54f93a9: Waiting
+62847262644f: Waiting
+4ad820e3e561: Layer already exists
+0f23dbac2da4: Layer already exists
+1537ed747ac9: Layer already exists
+ee8140f54162: Layer already exists
+3473b94bc0e3: Layer already exists
+62847262644f: Layer already exists
+17b7c23fba03: Layer already exists
+f168d52a989d: Layer already exists
+86ddeaa3ae14: Layer already exists
+a464c54f93a9: Layer already exists
+latest: digest: sha256:6968a0c64ccdcf0e0bdbeb5331e200ef37bd1c90393faa2af595db499e7db379 size: 2415
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Docker deploy)
+[Pipeline] sh
++ docker run -t -p 80:3000 -d mohangarapatidoc/docker-jenkins-poc:latest
+acd39dca29ada38774be544f73663a6e0c8893421d9347e5685141d179a55142
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
