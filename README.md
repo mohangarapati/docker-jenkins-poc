@@ -4,9 +4,28 @@
 
 This will store the workspace in /var/jenkins_home. All Jenkins data lives in there - including plugins and configuration. You will probably want to make that an explicit volume so you can manage it and attach to another container for upgrades :
 
-docker run -p 8080:8080 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts
+docker run -it -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock\ jenkins-docker
 
 this will automatically create a 'jenkins_home' docker volume on the host machine, that will survive the container stop/restart/deletion.
+
+# Running the container
+The easiest way is to pull from Docker Hub:
+
+docker run -it -p 8080:8080 -p 50000:50000 \
+    -v jenkins_home:/var/jenkins_home \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    --restart unless-stopped \
+    mohangarapatidoc/jenkins-docker
+    
+Alternatively, you can clone this repository, build the image from the Dockerfile, and then run the container
+
+docker build -t jenkins-docker .
+
+docker run -it -p 8080:8080 -p 50000:50000 \
+    -v jenkins_home:/var/jenkins_home \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    --restart unless-stopped \
+    jenkins-docker
 
 # Jenkins pipeline 
 
