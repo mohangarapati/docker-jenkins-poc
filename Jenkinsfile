@@ -1,18 +1,14 @@
 pipeline {
     agent any
 
-    stage('Clone sources') {
-        git url: 'https://github.com/mohangarapati/docker-jenkins-poc/.git'
-    }
-
     stages {
 	stage('Clone sources') {
-        git url: 'https://github.com/mohangarapati/docker-jenkins-poc/.git'
+        git url: 'https://github.com/mohangarapati/docker-jenkins-poc.git'
     }
 
         stage('Build image') {
             steps {
-               	sh 'echo 'Starting to build docker image'
+               	sh 'echo Starting to build docker image'
 		sh 'cd $JENKINS_HOME/docker-jenkins-poc/nodejs-demo'
 	stage('Docker Build') {
      	    steps {
